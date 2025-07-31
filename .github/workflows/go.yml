@@ -27,8 +27,11 @@ jobs:
     - name: Installing Master Dependencies
       run: cd master && go get
       
-    - name: Vet
-      run: go vet ./...
+    - name: Vet Agent
+      run: cd agent && go vet
+
+    - name: Vet Master
+      run: cd agent && go vet
       
     - name: Build Agent
       run: cd agent && go build -o build/agent main.go
