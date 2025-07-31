@@ -11,7 +11,41 @@ on:
 
 jobs:
 
-  build:
+  # build:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v4
+
+  #   - name: Set up Go
+  #     uses: actions/setup-go@v5
+  #     with:
+  #       go-version: '1.24.x'
+    
+  #   - name: Installing Agent Dependencies
+  #     run: cd agent && go get
+
+  #   - name: Installing Master Dependencies
+  #     run: cd master && go get
+      
+  #   - name: Vet Agent
+  #     run: cd agent && go vet
+
+  #   - name: Vet Master
+  #     run: cd agent && go vet
+      
+  #   - name: Build Agent
+  #     run: cd agent && go build -o build/agent main.go
+
+  #   - name: Build Master
+  #     run: cd master && go build -o build/master main.go
+
+  #   # - name: Test
+  #   #   run: go test -v ./...
+    
+  #   - name: Success
+  #     run: echo "✅ All checks passed. Code is clean."
+
+  agent-check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
@@ -24,23 +58,40 @@ jobs:
     - name: Installing Agent Dependencies
       run: cd agent && go get
 
-    - name: Installing Master Dependencies
-      run: cd master && go get
-      
     - name: Vet Agent
-      run: cd agent && go vet
-
-    - name: Vet Master
       run: cd agent && go vet
       
     - name: Build Agent
       run: cd agent && go build -o build/agent main.go
 
+    - name: Verify Binary
+      run: file agent/build/agent 
+
+    - name: Success
+      run: echo "✅ All Agent checks passed."
+
+
+  master-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24.x'
+    
+    - name: Installing Master Dependencies
+      run: cd master && go get
+      
+    - name: Vet Master
+      run: cd master && go vet
+      
     - name: Build Master
       run: cd master && go build -o build/master main.go
 
-    # - name: Test
-    #   run: go test -v ./...
-    
+    - name: Verify Binary
+      run: file master/build/master 
+
     - name: Success
-      run: echo "✅ All checks passed. Code is clean."
+      run: echo "✅ All Master checks passed."
