@@ -21,15 +21,19 @@ type signal struct {
 func main() {
 	fmt.Println("Server Listing on Port :8080")
 	http.HandleFunc("/report", displayReport)
-	log.Fatal(http.ListenAndServe("localhost:8080", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
 func displayReport(respw http.ResponseWriter, req *http.Request) {
 	if req.Method == "POST" {
 		// fmt.Println("Got Signal!")
 		var sig signal
-		json.NewDecoder(req.Body).Decode(&sig)
-		fmt.Println(sig)
+		if err := json.NewDecoder(req.Body).Decode(&sig); err != nil {
+			http.Error(respw, "Invalid JSON", http.StatusBadRequest)
+			return
+		}
+		fmt.Printf("[RECEIVED] Host: %s | CPU: %.2f%% | RAM: %.2f%% | Time: %v\n",
+			sig.Hostname, sig.CPUPercentage, sig.UsedMemPercentage, sig.Timestamp)
 		respw.WriteHeader(http.StatusOK)
 	}
 }
