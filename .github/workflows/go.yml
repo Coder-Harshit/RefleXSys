@@ -22,7 +22,7 @@ jobs:
         go-version: '1.24.x'
     
     - name: Installing Dependencies
-      run: go get .
+      run: go get ./...
 
     - name: Vet
       run: go vet ./...
