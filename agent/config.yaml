@@ -1,0 +1,9 @@
+server_url: "http://localhost:8080/report"
+
+report_interval: 1  #(seconds)
+
+thresholds:
+  cpu_percentage: 80.0
+  memory_percentage: 90.0
+
+

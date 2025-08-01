@@ -4,10 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/shirou/gopsutil/v4/cpu"
 	"github.com/shirou/gopsutil/v4/host"
 	"github.com/shirou/gopsutil/v4/mem"
+	"gopkg.in/yaml.v3"
 
 	"time"
 
@@ -24,8 +26,22 @@ type signal struct {
 	Timestamp         time.Time `json:"timestamp"`
 }
 
+type Thresholds struct {
+	CPUPercentage     float64 `yaml:"cpu_percentage"`
+	UsedMemPercentage float64 `yaml:"memory_percentage"`
+}
+
+type Config struct {
+	ServerURL      string     `yaml:"server_url"`
+	ReportInterval int        `yaml:"report_interval"`
+	Thresholds     Thresholds `yaml:"thresholds"`
+}
+
 func main() {
-	url := "http://localhost:8080/report"
+	conf, err := loadConfig()
+	errorCheck(err, "Config Failed to load")
+
+	url := conf.ServerURL
 
 	hid, err := host.HostID()
 	errorCheck(err, "[HostID] Object creation Issue!")
@@ -61,7 +77,7 @@ func main() {
 		errorCheck(err, "[POST] signal issue")
 		resp.Body.Close()
 		// fmt.Println(resp.StatusCode)
-		time.Sleep(1 * time.Second) // 1s sleep (at least)
+		time.Sleep(time.Duration(conf.ReportInterval) * time.Second) // 1s sleep (at least)
 	}
 }
 
@@ -90,4 +106,25 @@ func errorCheck(err error, msg string) {
 		fmt.Println(err)
 		// time.Sleep(5 * time.Second)
 	}
+}
+
+func loadConfig() (*Config, error) {
+	data, err := os.ReadFile("config.yaml")
+	errorCheck(err, "Error Reading File")
+	var config Config
+	if len(data) == 0 {
+		// empty config file ... create a default one and read it
+		config.ServerURL = "http://localhost:8080/report"
+		config.ReportInterval = 1
+		config.Thresholds.CPUPercentage = 80.0
+		config.Thresholds.UsedMemPercentage = 90.0
+
+		_, err = yaml.Marshal(&config)
+		errorCheck(err, "error creating default config file")
+
+	} else {
+		err = yaml.Unmarshal([]byte(data), &config)
+		errorCheck(err, "unable to parse config file")
+	}
+	return &config, nil
 }
