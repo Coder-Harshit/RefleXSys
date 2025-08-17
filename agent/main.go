@@ -23,6 +23,7 @@ type signal struct {
 	UsedMem           uint64    `json:"used_memory"`
 	UsedMemPercentage float64   `json:"used_memory_percentage"`
 	CPUPercentage     float64   `json:"cpu_used_percentage"`
+	IsSuspicious      bool      `json:"is_suspicious"`
 	Timestamp         time.Time `json:"timestamp"`
 }
 

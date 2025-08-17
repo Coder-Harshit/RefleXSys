@@ -3,3 +3,6 @@ port: 8080
 # Levels-> { "info" , "warn" , "debug" }
 logging_level: "info"
 
+addons: [
+  
+]
