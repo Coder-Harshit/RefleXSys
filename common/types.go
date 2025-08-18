@@ -1,6 +1,8 @@
 package common
 
-import "time"
+import (
+	"time"
+)
 
 type Signal struct {
 	HostID            string    `json:"host_id"`
@@ -29,6 +31,8 @@ type AgentConfig struct {
 }
 
 type RelayConfig struct {
-	Port     uint16 `yaml:"port"`
-	LogLevel string `yaml:"logging_level"`
+	Port          uint16 `yaml:"port"`
+	LogLevel      string `yaml:"logging_level"`
+	FlushInterval int    `yaml:"flush_interval"`
+	MasterUrl     string `yaml:"master_url"`
 }
