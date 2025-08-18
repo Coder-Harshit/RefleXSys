@@ -56,20 +56,52 @@ jobs:
       with:
         go-version: '1.24.x'
     
-    - name: Installing Agent Dependencies
-      run: cd agent && go get
+    - name: Installing Dependencies
+      run: go mod tidy
 
     - name: Vet Agent
-      run: cd agent && go vet
+      run: go vet ./agent
+
+    - name: Create build directory
+      run: mkdir -p build
       
     - name: Build Agent
-      run: cd agent && go build -o build/agent main.go
+      run: go build -o build/agent agent/main.go
 
     - name: Verify Binary
-      run: file agent/build/agent 
+      run: file build/agent 
 
     - name: Success
       run: echo "✅ All Agent checks passed."
+
+
+  relay-check:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.24.x'
+    
+    - name: Installing Dependencies
+      run: go mod tidy
+      
+    - name: Vet Relay
+      run: go vet ./relay
+      
+    - name: Create build directory
+      run: mkdir -p build
+      
+    - name: Build Relay
+      run: go build -o build/relay relay/main.go
+
+    - name: Verify Binary
+      run: file build/relay
+
+    - name: Success
+      run: echo "✅ All Relay checks passed."
 
 
   master-check:
@@ -82,17 +114,20 @@ jobs:
       with:
         go-version: '1.24.x'
     
-    - name: Installing Master Dependencies
-      run: cd master && go get
+    - name: Installing Dependencies
+      run: go mod tidy
       
     - name: Vet Master
-      run: cd master && go vet
-      
+      run: go vet ./master
+    
+    - name: Create build directory
+      run: mkdir -p build
+
     - name: Build Master
-      run: cd master && go build -o build/master main.go
+      run: go build -o build/master master/main.go
 
     - name: Verify Binary
-      run: file master/build/master 
+      run: file build/master 
 
     - name: Success
       run: echo "✅ All Master checks passed."

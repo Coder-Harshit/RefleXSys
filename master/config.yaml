@@ -1,5 +1,8 @@
-port: 8080
+port: 9090
 
 # Levels-> { "info" , "warn" , "debug" }
 logging_level: "info"
 
+addons: [
+  
+]
