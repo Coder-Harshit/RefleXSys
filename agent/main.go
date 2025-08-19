@@ -61,30 +61,10 @@ func main() {
 	}
 }
 
-// func displaySignal(sig signal) {
-// 	fmt.Println("Signal {")
-// 	fmt.Printf("\tHostID:\t\t%v\n", sig.HostID)
-// 	fmt.Printf("\tHostName:\t%v\n", sig.Hostname)
-// 	fmt.Printf("\tMemory Total:\t%v\n", sig.TotalMem)
-// 	fmt.Printf("\tMemory Used:\t%v\n", sig.UsedMem)
-// 	fmt.Printf("\tMemory Used:\t%.2f%%\n", sig.UsedMemPercentage)
-// 	fmt.Printf("\tCPU Used:\t%.2f%%\n", sig.CPUPercentage)
-// 	fmt.Printf("\tTimestamp:\t%v\n", sig.Timestamp)
-// 	fmt.Println("}")
-// 	fmt.Println()
-// }
-
-// func displaySignal(jsonSig []byte) {
-// 	fmt.Println("Signal =>")
-// 	fmt.Println(string(jsonSig))
-// 	fmt.Println()
-// }
-
 func errorCheck(err error, msg string) {
 	if err != nil {
 		fmt.Println(msg)
 		fmt.Println(err)
-		// time.Sleep(5 * time.Second)
 	}
 }
 
@@ -94,7 +74,7 @@ func loadConfig() (*common.AgentConfig, error) {
 	var config common.AgentConfig
 	if len(data) == 0 {
 		// empty config file ... create a default one and read it
-		config.RelayURL = "http://localhost:8101/report"
+		config.RelayURL = "http://relay:8101/report"
 		config.ReportInterval = 1
 
 		_, err = yaml.Marshal(&config)
