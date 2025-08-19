@@ -1,0 +1,22 @@
+FROM golang:alpine AS build
+
+WORKDIR /app
+
+# ./ is same as /app/ ... as we have set the workdir as /app
+COPY go.mod go.sum ./ 
+RUN go mod download
+
+COPY master/. .
+COPY common ./common
+
+RUN go build -o master ./main.go
+
+
+FROM alpine:latest
+
+WORKDIR /app
+
+COPY --from=build /app/master .
+COPY master/config.yaml .
+
+ENTRYPOINT ["./master"]
