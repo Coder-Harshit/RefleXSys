@@ -1,4 +1,4 @@
-relay_url: "http://localhost:8080/report"
+relay_url: "http://relay:8101/report"
 
 report_interval: 1  #(seconds)
 

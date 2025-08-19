@@ -1,0 +1,26 @@
+services:
+  agent: 
+    build:
+      context: .
+      dockerfile: agent/dockerfile
+    volumes: 
+      - ./agent/config.yaml:/app/config.yaml
+    depends_on:
+      - relay
+  
+  relay:
+    build:
+      context: .
+      dockerfile: relay/dockerfile
+    volumes:
+      - ./relay/config.yaml:/app/config.yaml
+    depends_on:
+      - master
+    
+  master:
+    build:
+      context: .
+      dockerfile: master/dockerfile
+    volumes:
+      - ./master/config.yaml:/app/config.yaml
+    

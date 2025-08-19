@@ -94,10 +94,8 @@ func loadConfig() (*common.AgentConfig, error) {
 	var config common.AgentConfig
 	if len(data) == 0 {
 		// empty config file ... create a default one and read it
-		config.RelayURL = "http://localhost:8080/report"
+		config.RelayURL = "http://localhost:8101/report"
 		config.ReportInterval = 1
-		config.Thresholds.CPUPercentage = 80.0
-		config.Thresholds.UsedMemPercentage = 90.0
 
 		_, err = yaml.Marshal(&config)
 		errorCheck(err, "error creating default config file")

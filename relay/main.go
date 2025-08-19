@@ -35,7 +35,7 @@ func main() {
 		jsonBatch, _ := json.Marshal(s)
 		resp, err := http.Post(conf.MasterUrl, "application/json", bytes.NewReader(jsonBatch))
 		if err != nil {
-			fmt.Println("Error encountered while informing MASTER!")
+			log.Printf("Error encountered while informing MASTER! %v", err)
 			return
 		}
 		resp.Body.Close()
@@ -52,7 +52,8 @@ func displayReport(respw http.ResponseWriter, req *http.Request) {
 			http.Error(respw, "Invalid JSON", http.StatusBadRequest)
 			return
 		}
-		fmt.Printf("[RECEIVED] %+v\n", sig)
+		// fmt.Printf("[RECEIVED] %+v\n", sig)
+		fmt.Printf("[RECEIVED signal from] %+v\n", sig.HostID)
 		// fmt.Printf("buffer.signals: %v\n", buffer.signals)
 
 		buffer.Lock()
@@ -102,7 +103,7 @@ func loadConfig() (*common.RelayConfig, error) {
 	var config common.RelayConfig
 	if len(data) == 0 {
 		// empty config file ... create a default one and read it
-		config.Port = 8080
+		config.Port = 8101
 		config.LogLevel = "info"
 		config.FlushInterval = 5
 

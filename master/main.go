@@ -47,7 +47,7 @@ func loadConfig() (*common.ServerConfig, error) {
 	var config common.ServerConfig
 	if len(data) == 0 {
 		// empty config file ... create a default one and read it
-		config.Port = 9090
+		config.Port = 9101
 		config.LogLevel = "info"
 
 		_, err = yaml.Marshal(&config)

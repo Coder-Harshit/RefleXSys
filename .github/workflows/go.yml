@@ -131,3 +131,26 @@ jobs:
 
     - name: Success
       run: echo "✅ All Master checks passed."
+  
+  docker-build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build all images
+        run: docker compose build
+
+      - name: Start services
+        run: docker compose up -d
+
+      - name: Wait for services to start
+        run: sleep 10
+        
+      - name: Check logs for relay/master/agent
+        run: docker compose logs
+
+      - name: Shut down stack
+        run: docker compose down
